@@ -204,4 +204,6 @@ function test_parse_command() {
 
 }
 
-test_parse_command;
+if [ "`caller | awk '{print $1}'`" == '0' ]; then
+    test_parse_command;
+fi
