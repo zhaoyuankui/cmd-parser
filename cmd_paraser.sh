@@ -1,15 +1,15 @@
 #!/bin/bash
 # Requirements:
 #     Minimum Bash version 4 for associative array.
-# API input
-# logger
-# default_command
-# -- 
-# command
-#declare -a commands=(node ban);
-# sub_command
-#declare -a sub_commands=(add del);
-#debug_switch=on|off
+# API:
+## logger - the logger to log message
+## default_command - the default command if no command assigned
+## commands - the commands array, used for distincting from ordinary parameters, e.g.:
+###  declare -a commands=(node ban);
+## sub_commands - the sub-commands array, used for distincting from ordinary parameters, e.g.:
+###  declare -a sub_commands=(add del);
+## debug_switch=on|off - the debug switch, if switch on, it will print logs to logger,
+##                       or the default std_logger, if switched off, it will be silent.
 
 # API output
 declare cmd=;
@@ -20,7 +20,7 @@ declare -a parameters=();
 function parse_command() {
     init;
 
-    $logger "commond line: ${@}";
+    $logger "commond line: $0 ""${@}";
     if [ "$1" ] && [[ ${commands[@]/$1/} != ${commands[@]} ]]; then
         cmd="$1";
         shift;
@@ -28,6 +28,9 @@ function parse_command() {
             sub_cmd="$1";
             shift;
         fi
+    fi
+    if [ ! "$cmd" ]; then
+        cmd="$default_command";
     fi
     $logger "command: $cmd, sub command: $sub_cmd";
 
